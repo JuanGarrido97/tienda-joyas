@@ -1,0 +1,13 @@
+{
+  "name": "tienda-joyas",
+  "version": "1.0.0",
+  "description": "Tienda de joyas online",
+  "scripts": {
+    "dev": "gulp"
+  },
+  "devDependencies": {
+    "gulp": "^4.0.2",
+    "gulp-sass": "^5.1.0",
+    "sass": "^1.57.1"
+  }
+}
