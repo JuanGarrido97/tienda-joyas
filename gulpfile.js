@@ -11,4 +11,5 @@ function watchFiles() {
   watch('assets/scss/**/*.scss', css);
 }
 
+exports.css = css;
 exports.default = series(css, watchFiles);

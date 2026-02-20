@@ -1,0 +1,62 @@
+[
+  {
+    "id": 1,
+    "name": "Anillo de Oro",
+    "description": "Elegante anillo de oro de 18 quilates con acabado pulido. Diseño clásico ideal para toda ocasión.",
+    "price": 120000,
+    "category": "anillos",
+    "metal": "oro",
+    "stock": 5,
+    "image": "assets/img/products/anillo-oro.jpg"
+  },
+  {
+    "id": 2,
+    "name": "Aros de Plata",
+    "description": "Aros de plata 925 con diseño minimalista. Livianos y cómodos para uso diario.",
+    "price": 45000,
+    "category": "aros",
+    "metal": "plata",
+    "stock": 12,
+    "image": "assets/img/products/aros-plata.jpg"
+  },
+  {
+    "id": 3,
+    "name": "Pulsera de Platino",
+    "description": "Pulsera de platino con eslabones refinados. Una pieza exclusiva de alta joyería.",
+    "price": 250000,
+    "category": "pulseras",
+    "metal": "platino",
+    "stock": 3,
+    "image": "assets/img/products/pulsera-platino.jpg"
+  },
+  {
+    "id": 4,
+    "name": "Collar de Oro Blanco",
+    "description": "Collar de oro blanco de 14 quilates con cadena delicada. Perfecto para combinar con cualquier look.",
+    "price": 180000,
+    "category": "collares",
+    "metal": "oro-blanco",
+    "stock": 7,
+    "image": "assets/img/products/collar-oro-blanco.jpg"
+  },
+  {
+    "id": 5,
+    "name": "Anillo de Plata",
+    "description": "Anillo de plata 925 con diseño contemporáneo. Versátil y elegante.",
+    "price": 35000,
+    "category": "anillos",
+    "metal": "plata",
+    "stock": 20,
+    "image": "assets/img/products/anillo-plata.jpg"
+  },
+  {
+    "id": 6,
+    "name": "Aros de Oro",
+    "description": "Aros de oro de 18 quilates con cierre seguro. Brillo y sofisticación en cada detalle.",
+    "price": 95000,
+    "category": "aros",
+    "metal": "oro",
+    "stock": 8,
+    "image": "assets/img/products/aros-oro.jpg"
+  }
+]

@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "Tienda de joyas online",
   "scripts": {
-    "dev": "gulp"
+    "dev": "gulp",
+    "build": "gulp css"
   },
   "devDependencies": {
     "gulp": "^4.0.2",

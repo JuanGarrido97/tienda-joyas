@@ -1,0 +1,141 @@
+@use 'variables' as *;
+@use 'mixins' as *;
+
+.nav {
+  background-color: $color-secondary;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+
+  &__container {
+    display: flex;
+    align-items: center;
+    max-width: $breakpoint-xl;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+    height: 60px;
+  }
+
+  &__logo {
+    font-family: $font-heading;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: $color-dark;
+    margin-right: 2rem;
+  }
+
+  &__menu {
+    display: flex;
+    gap: 2rem;
+  }
+
+  &__item {
+    position: relative;
+
+    &--dropdown:hover .nav__dropdown,
+    &--dropdown.active .nav__dropdown {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+  }
+
+  &__link {
+    background: none;
+    border: none;
+    font-family: $font-body;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: $color-dark;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+
+    &:hover {
+      background-color: rgba($color-dark, 0.1);
+    }
+  }
+
+  &__dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    min-width: 180px;
+    background-color: $color-white;
+    border-radius: 6px;
+    box-shadow: $shadow-card;
+    padding: 0.5rem 0;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-8px);
+    transition: opacity 0.2s, visibility 0.2s, transform 0.2s;
+  }
+
+  &__auth {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-left: auto;
+  }
+
+  &__cart {
+    display: flex;
+    align-items: center;
+    color: $color-dark;
+    padding: 0.4rem;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+
+    &:hover {
+      background-color: rgba($color-dark, 0.1);
+    }
+  }
+
+  &__btn {
+    font-family: $font-body;
+    font-size: 0.9rem;
+    font-weight: 500;
+    padding: 0.45rem 1.2rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s;
+
+    &--login {
+      color: $color-dark;
+      background-color: transparent;
+      border: 1.5px solid $color-dark;
+
+      &:hover {
+        background-color: rgba($color-dark, 0.1);
+      }
+    }
+
+    &--register {
+      color: $color-white;
+      background-color: $color-dark;
+
+      &:hover {
+        background-color: lighten($color-dark, 10%);
+      }
+    }
+  }
+
+  &__dropdown-link {
+    display: block;
+    width: 100%;
+    background: none;
+    border: none;
+    text-align: left;
+    font-family: $font-body;
+    padding: 0.6rem 1.2rem;
+    font-size: 0.9rem;
+    color: $color-dark;
+    cursor: pointer;
+    transition: background-color 0.15s;
+
+    &:hover {
+      background-color: rgba($color-secondary, 0.2);
+    }
+  }
+}

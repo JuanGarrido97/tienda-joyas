@@ -1,0 +1,130 @@
+@use 'variables' as *;
+
+.product-detail {
+  padding: 2rem 0 4rem;
+
+  &__container {
+    max-width: $breakpoint-xl;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+  }
+
+  &__back {
+    display: inline-block;
+    font-size: 0.9rem;
+    color: $color-text-light;
+    margin-bottom: 2rem;
+    transition: color 0.2s;
+
+    &:hover {
+      color: $color-primary;
+    }
+  }
+
+  &__content {
+    display: flex;
+    gap: 3rem;
+    align-items: flex-start;
+  }
+
+  &__image {
+    width: 500px;
+    height: 500px;
+    flex-shrink: 0;
+    background-color: rgba($color-silver, 0.1);
+    background-size: cover;
+    background-position: center;
+    border-radius: 10px;
+  }
+
+  &__info {
+    flex: 1;
+  }
+
+  &__name {
+    font-family: $font-heading;
+    font-size: 2rem;
+    font-weight: 600;
+    color: $color-text;
+    margin-bottom: 0.75rem;
+  }
+
+  &__price {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: $color-secondary;
+    margin-bottom: 1.5rem;
+  }
+
+  &__description {
+    font-size: 1rem;
+    color: $color-text-light;
+    line-height: 1.7;
+    margin-bottom: 1.5rem;
+  }
+
+  &__meta {
+    display: flex;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+  }
+
+  &__category,
+  &__metal {
+    font-size: 0.85rem;
+    color: $color-text-light;
+    padding: 0.35rem 0.9rem;
+    border: 1px solid rgba($color-white, 0.12);
+    border-radius: 20px;
+  }
+
+  &__stock {
+    font-size: 0.95rem;
+    color: $color-text-light;
+    margin-bottom: 2rem;
+
+    &--out {
+      color: #e74c3c;
+    }
+  }
+
+  &__actions {
+    display: flex;
+    gap: 1rem;
+  }
+
+  &__btn {
+    font-family: $font-body;
+    font-size: 1rem;
+    font-weight: 500;
+    padding: 0.75rem 2rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.15s;
+
+    &:active {
+      transform: scale(0.97);
+    }
+
+    &--buy {
+      background-color: $color-secondary;
+      color: $color-dark;
+      border: none;
+
+      &:hover {
+        background-color: darken($color-secondary, 8%);
+      }
+    }
+
+    &--cart {
+      background-color: transparent;
+      color: $color-text;
+      border: 1.5px solid rgba($color-white, 0.2);
+
+      &:hover {
+        border-color: $color-secondary;
+        color: $color-secondary;
+      }
+    }
+  }
+}

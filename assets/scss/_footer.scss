@@ -1,0 +1,63 @@
+@use 'variables' as *;
+
+.footer {
+  margin-top: 4rem;
+  border-top: 1px solid rgba($color-white, 0.08);
+
+  &__container {
+    display: flex;
+    justify-content: space-between;
+    max-width: $breakpoint-xl;
+    margin: 0 auto;
+    padding: 2.5rem 1.5rem;
+    gap: 2rem;
+  }
+
+  &__title {
+    font-family: $font-heading;
+    font-size: 1.1rem;
+    color: $color-primary;
+    margin-bottom: 0.75rem;
+  }
+
+  &__text {
+    font-size: 0.9rem;
+    color: $color-text-light;
+    line-height: 1.8;
+  }
+
+  &__icons {
+    display: flex;
+    gap: 1rem;
+  }
+
+  &__link {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    color: $color-text-light;
+    padding: 0.5rem 1rem;
+    border: 1px solid rgba($color-white, 0.1);
+    border-radius: 6px;
+    transition: color 0.2s, border-color 0.2s;
+
+    &:hover {
+      color: $color-secondary;
+      border-color: $color-secondary;
+    }
+  }
+
+  &__icon {
+    width: 18px;
+    height: 18px;
+  }
+
+  &__bottom {
+    text-align: center;
+    padding: 1rem 1.5rem;
+    border-top: 1px solid rgba($color-white, 0.05);
+    font-size: 0.8rem;
+    color: $color-text-light;
+  }
+}
