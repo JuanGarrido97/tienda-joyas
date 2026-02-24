@@ -53,5 +53,36 @@ document.addEventListener('DOMContentLoaded', () => {
         stockEl.textContent = 'Agotado';
         stockEl.classList.add('product-detail__stock--out');
       }
+
+      // Agregar event listeners a los botones del carrito
+      const cartBtn = document.querySelector('.product-detail__btn--cart');
+      const buyBtn = document.querySelector('.product-detail__btn--buy');
+
+      if (cartBtn) {
+        cartBtn.addEventListener('click', () => {
+          if (product.stock <= 0) {
+            alert('Este producto está agotado');
+            return;
+          }
+          addToCart(product);
+          alert('Producto agregado al carrito');
+          updateCartBadge();
+        });
+      }
+
+      if (buyBtn) {
+        buyBtn.addEventListener('click', () => {
+          if (product.stock <= 0) {
+            alert('Este producto está agotado');
+            return;
+          }
+          addToCart(product);
+          updateCartBadge();
+          window.location.href = 'cart.html';
+        });
+      }
     });
-});
+
+  // Actualizar navbar
+  updateAuthNav();
+  updateCartBadge();
