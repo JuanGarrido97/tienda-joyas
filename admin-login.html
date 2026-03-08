@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acceso Administrador - Tienda de Joyas</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/app.css">
+</head>
+<body>
+    <div class="admin-container">
+        <div class="admin-box">
+            <h1>🔐 Administrador</h1>
+            <p>Acceso exclusivo para administradores</p>
+
+            <div id="successMsg" class="success-message"></div>
+            <div id="generalError" class="error-message"></div>
+
+            <form id="adminLoginForm">
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" placeholder="admin@tienda.com" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Contraseña</label>
+                    <input type="password" id="password" name="password" placeholder="••••••••" required>
+                </div>
+
+                <button type="submit" class="btn-admin">Acceder al Panel</button>
+            </form>
+
+            <div style="margin-top: 1.5rem; text-align: center;">
+                <a href="index.html" style="color: #4da5c8; text-decoration: none; font-size: 0.9rem;">
+                    ← Volver a tienda
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:3000';
+
+        const form = document.getElementById('adminLoginForm');
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            document.getElementById('generalError').style.display = 'none';
+            document.getElementById('generalError').textContent = '';
+
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            try {
+                const res = await fetch(`${API_URL}/api/admin/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const data = await res.json();
+
+                if (res.ok) {
+                    localStorage.setItem('admin_token', data.token);
+                    localStorage.setItem('admin_user', JSON.stringify(data.user));
+
+                    const successMsg = document.getElementById('successMsg');
+                    successMsg.textContent = `¡Bienvenido ${data.user.name}! Redirigiendo...`;
+                    successMsg.style.display = 'block';
+
+                    setTimeout(() => {
+                        window.location.href = 'admin-dashboard.html';
+                    }, 1500);
+                } else {
+                    document.getElementById('generalError').textContent = data.error || 'Error al iniciar sesión';
+                    document.getElementById('generalError').style.display = 'block';
+                }
+            } catch (err) {
+                document.getElementById('generalError').textContent = 'Error de conexión con el servidor';
+                document.getElementById('generalError').style.display = 'block';
+            }
+        });
+    </script>
+</body>
+</html>

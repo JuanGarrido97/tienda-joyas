@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tu Carro | Tienda</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/app.css">
+</head>
+<body>
+
+    <nav class="nav">
+        <div class="nav__container">
+            <a href="index.html" class="nav__logo">Tienda</a>
+            <div class="nav__auth">
+                <a href="#" class="nav__cart">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+                    <span class="nav__cart-badge"></span>
+                </a>
+                <a href="login.html" class="nav__btn nav__btn--login">Iniciar sesión</a>
+                <a href="register.html" class="nav__btn nav__btn--register">Registrarse</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="cart-page">
+        <div class="cart-page__container">
+            <a href="index.html" class="cart-page__back">← Seguir comprando</a>
+            <h1 class="cart-page__title">Tu carro</h1>
+
+            <!-- Estado vacío -->
+            <div id="cartEmpty" class="cart-page__empty" style="display:none;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="64" height="64"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+                <p>Tu carro está vacío</p>
+                <a href="index.html" class="cart-page__empty-btn">Ver productos</a>
+            </div>
+
+            <!-- Layout con items + resumen -->
+            <div id="cartLayout" class="cart-page__layout">
+
+                <!-- Lista de items -->
+                <section class="cart-page__items">
+                    <div class="cart-page__items-header">
+                        <span>Producto</span>
+                        <span>Precio</span>
+                        <span>Cantidad</span>
+                        <span>Subtotal</span>
+                        <span></span>
+                    </div>
+                    <div id="cartPageItems"></div>
+                    <div class="cart-page__actions">
+                        <button id="clearCartBtn" class="cart-page__clear-btn" type="button">Vaciar carro</button>
+                    </div>
+                </section>
+
+                <!-- Resumen -->
+                <aside class="cart-page__summary">
+                    <h2 class="cart-page__summary-title">Resumen</h2>
+                    <div class="cart-page__summary-rows">
+                        <div class="cart-page__summary-row">
+                            <span>Subtotal</span>
+                            <span id="pageSubtotal"></span>
+                        </div>
+                        <div class="cart-page__summary-row">
+                            <span>Envío</span>
+                            <span class="cart-page__shipping">Gratis</span>
+                        </div>
+                        <div class="cart-page__summary-row cart-page__summary-row--total">
+                            <span>Total</span>
+                            <span id="pageTotal"></span>
+                        </div>
+                    </div>
+                    <button id="checkoutBtn" class="cart-page__checkout-btn" type="button">Ir a pagar</button>
+                    <a href="index.html" class="cart-page__continue-link">← Seguir comprando</a>
+                </aside>
+
+            </div>
+        </div>
+    </main>
+
+    <script src="assets/js/auth.js"></script>
+    <script src="assets/js/cart.js"></script>
+    <script src="assets/js/cart-page.js"></script>
+</body>
+</html>

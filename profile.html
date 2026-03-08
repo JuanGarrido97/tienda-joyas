@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Perfil | Tienda</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/app.css">
+</head>
+<body>
+
+    <nav class="nav">
+        <div class="nav__container">
+            <a href="index.html" class="nav__logo">Tienda</a>
+            <div class="nav__auth">
+                <a href="#" class="nav__cart">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+                    <span class="nav__cart-badge"></span>
+                </a>
+                <a href="login.html" class="nav__btn nav__btn--login">Iniciar sesión</a>
+                <a href="register.html" class="nav__btn nav__btn--register">Registrarse</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="profile">
+        <div class="profile__container">
+            <a href="index.html" class="profile__back">← Volver a la tienda</a>
+            <h1 class="profile__title">Mi Perfil</h1>
+
+            <div class="profile__layout">
+
+                <!-- Sidebar de navegación -->
+                <nav class="profile__nav">
+                    <button class="profile__nav-btn profile__nav-btn--active" data-section="info" type="button">Información personal</button>
+                    <button class="profile__nav-btn" data-section="password" type="button">Cambiar contraseña</button>
+                    <button class="profile__nav-btn" data-section="addresses" type="button">Mis direcciones</button>
+                    <button class="profile__nav-btn" data-section="orders" type="button">Mis pedidos</button>
+                    <button class="profile__nav-btn profile__nav-btn--logout" id="logoutBtn" type="button">Cerrar sesión</button>
+                </nav>
+
+                <!-- Sección: información personal -->
+                <section class="profile__section" id="section-info">
+                    <h2 class="profile__section-title">Información personal</h2>
+                    <form class="profile__form" id="profileForm">
+                        <div class="profile__form-group">
+                            <label for="profileName">Nombre</label>
+                            <input type="text" id="profileName" required>
+                            <span class="profile__error" id="profileNameError"></span>
+                        </div>
+                        <div class="profile__form-group">
+                            <label for="profileEmail">Email</label>
+                            <input type="email" id="profileEmail" required>
+                            <span class="profile__error" id="profileEmailError"></span>
+                        </div>
+                        <span class="profile__error" id="profileGeneralError"></span>
+                        <p class="profile__success" id="profileSuccess" style="display:none;">Perfil actualizado correctamente.</p>
+                        <button type="submit" class="profile__submit-btn">Guardar cambios</button>
+                    </form>
+                </section>
+
+                <!-- Sección: cambiar contraseña -->
+                <section class="profile__section profile__section--hidden" id="section-password">
+                    <h2 class="profile__section-title">Cambiar contraseña</h2>
+                    <form class="profile__form" id="passwordForm">
+                        <div class="profile__form-group">
+                            <label for="currentPassword">Contraseña actual</label>
+                            <input type="password" id="currentPassword" required>
+                        </div>
+                        <div class="profile__form-group">
+                            <label for="newPassword">Nueva contraseña</label>
+                            <input type="password" id="newPassword" required>
+                        </div>
+                        <div class="profile__form-group">
+                            <label for="confirmNewPassword">Confirmar nueva contraseña</label>
+                            <input type="password" id="confirmNewPassword" required>
+                        </div>
+                        <span class="profile__error" id="passwordError"></span>
+                        <p class="profile__success" id="passwordSuccess" style="display:none;">Contraseña cambiada correctamente.</p>
+                        <button type="submit" class="profile__submit-btn">Cambiar contraseña</button>
+                    </form>
+                </section>
+
+                <!-- Sección: mis direcciones -->
+                <section class="profile__section profile__section--hidden" id="section-addresses">
+                    <h2 class="profile__section-title">Mis direcciones</h2>
+                    <div id="profileAddressList" class="profile__address-list"></div>
+                    <button class="profile__add-address-btn" id="toggleAddressForm" type="button">+ Agregar dirección</button>
+                    <form class="profile__form profile__address-form" id="newAddressForm" style="display:none;">
+                        <div class="address-form__grid">
+                            <div class="address-form__group address-form__group--full">
+                                <label for="addr_nombre">Nombre del destinatario *</label>
+                                <input type="text" id="addr_nombre" required>
+                            </div>
+                            <div class="address-form__group address-form__group--full">
+                                <label for="addr_calle">Calle y número *</label>
+                                <input type="text" id="addr_calle" required>
+                            </div>
+                            <div class="address-form__group">
+                                <label for="addr_ciudad">Ciudad *</label>
+                                <input type="text" id="addr_ciudad" required>
+                            </div>
+                            <div class="address-form__group">
+                                <label for="addr_region">Región</label>
+                                <input type="text" id="addr_region">
+                            </div>
+                            <div class="address-form__group">
+                                <label for="addr_cp">Código postal</label>
+                                <input type="text" id="addr_cp">
+                            </div>
+                            <div class="address-form__group">
+                                <label for="addr_tel">Teléfono</label>
+                                <input type="text" id="addr_tel">
+                            </div>
+                        </div>
+                        <span class="profile__error" id="addressError"></span>
+                        <div class="profile__form-actions">
+                            <button type="submit" class="profile__submit-btn">Guardar dirección</button>
+                            <button type="button" class="profile__cancel-btn" id="cancelAddressForm">Cancelar</button>
+                        </div>
+                    </form>
+                </section>
+
+                <!-- Sección: mis pedidos -->
+                <section class="profile__section profile__section--hidden" id="section-orders">
+                    <h2 class="profile__section-title">Mis pedidos</h2>
+                    <div id="ordersList" class="orders-list"></div>
+                    <!-- Detalle de pedido -->
+                    <div id="orderDetail" class="order-detail" style="display:none;">
+                        <button class="order-detail__back" id="backToOrders" type="button">← Volver a mis pedidos</button>
+                        <div id="orderDetailContent"></div>
+                    </div>
+                </section>
+
+            </div>
+        </div>
+    </main>
+
+    <script src="assets/js/auth.js"></script>
+    <script src="assets/js/cart.js"></script>
+    <script src="assets/js/profile.js"></script>
+</body>
+</html>

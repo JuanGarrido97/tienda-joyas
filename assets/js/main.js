@@ -1,4 +1,21 @@
 document.addEventListener('DOMContentLoaded', () => {
+  // ── Hamburger ─────────────────────────────────────────────
+  const hamburger = document.getElementById('navHamburger');
+  const navMenu   = document.getElementById('navMenu');
+
+  if (hamburger && navMenu) {
+    hamburger.addEventListener('click', () => {
+      const open = navMenu.classList.toggle('nav__menu--open');
+      hamburger.classList.toggle('nav__hamburger--open', open);
+    });
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.nav__container')) {
+        navMenu.classList.remove('nav__menu--open');
+        hamburger.classList.remove('nav__hamburger--open');
+      }
+    });
+  }
+
   // Nav dropdowns
   const dropdowns = document.querySelectorAll('.nav__item--dropdown');
 
@@ -48,7 +65,18 @@ document.addEventListener('DOMContentLoaded', () => {
         <h4 class="product-card__name">${product.name}</h4>
         <p class="product-card__price">${formatPrice(product.price)}</p>
         <span class="product-card__stock">${product.stock > 0 ? 'Stock: ' + product.stock : 'Agotado'}</span>
+        ${product.stock > 0 ? '<button class="product-card__add-btn" type="button">Agregar al carro</button>' : ''}
       `;
+
+      if (product.stock > 0) {
+        const addBtn = card.querySelector('.product-card__add-btn');
+        addBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          Cart.add(product);
+          addBtn.textContent = '¡Agregado!';
+          setTimeout(() => { addBtn.textContent = 'Agregar al carro'; }, 1500);
+        });
+      }
 
       grid.appendChild(card);
     });
@@ -102,11 +130,14 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+  const searchInput = document.querySelector('.nav__search-input');
+
   function filterProducts() {
     if (isAnimating) return;
 
     const activeCategories = [];
     const activeMetals = [];
+    const searchQuery = searchInput ? searchInput.value.trim().toLowerCase() : '';
 
     checkboxes.forEach(cb => {
       if (!cb.checked) return;
@@ -117,6 +148,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let filtered = allProducts;
 
+    if (searchQuery) {
+      filtered = filtered.filter(p =>
+        p.name.toLowerCase().includes(searchQuery) ||
+        (p.description && p.description.toLowerCase().includes(searchQuery))
+      );
+    }
     if (activeCategories.length > 0) {
       filtered = filtered.filter(p => activeCategories.includes(p.category));
     }
@@ -128,6 +165,9 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   checkboxes.forEach(cb => cb.addEventListener('change', filterProducts));
+  if (searchInput) {
+    searchInput.addEventListener('input', filterProducts);
+  }
 
   // Nav dropdown links activan filtros del sidebar
   document.querySelectorAll('.nav__dropdown-link').forEach(link => {
@@ -138,19 +178,28 @@ document.addEventListener('DOMContentLoaded', () => {
       checkboxes.forEach(cb => {
         if (cb.value === value) cb.checked = true;
       });
+      if (searchInput) searchInput.value = '';
       filterProducts();
     });
   });
 
   document.querySelector('.filters__clear').addEventListener('click', () => {
     checkboxes.forEach(cb => { cb.checked = false; });
+    if (searchInput) searchInput.value = '';
     filterProducts();
   });
 
-  fetch('data/products.json')
+  // Skeletons mientras carga
+  const SKELETON_COUNT = 8;
+  grid.innerHTML = Array(SKELETON_COUNT).fill('<div class="product-card-skeleton"></div>').join('');
+
+  fetch('http://localhost:3000/api/products')
     .then(res => res.json())
     .then(products => {
       allProducts = products;
       renderProducts(allProducts);
+    })
+    .catch(() => {
+      grid.innerHTML = '<p class="products__empty">Error al cargar productos.</p>';
     });
 });

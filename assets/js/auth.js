@@ -1,183 +1,28 @@
+const API_URL = 'http://localhost:3000';
+
 // ============================================
-// SISTEMA DE AUTENTICACIÓN FRONTEND
+// GESTIÓN DE SESIÓN
 // ============================================
 
-class AuthManager {
-    constructor() {
-        this.storageKey = 'tienda_users';
-        this.currentUserKey = 'tienda_current_user';
-        this.initializeUsers();
-    }
-
-    // Inicializar con algunos usuarios de prueba
-    initializeUsers() {
-        if (!localStorage.getItem(this.storageKey)) {
-            const defaultUsers = [
-                {
-                    id: 1,
-                    name: 'Usuario Demo',
-                    email: 'demo@tienda.com',
-                    password: 'demo123', // En un proyecto real, esto estaría hasheado
-                    createdAt: new Date().toISOString()
-                }
-            ];
-            localStorage.setItem(this.storageKey, JSON.stringify(defaultUsers));
-        }
-    }
-
-    // Obtener todos los usuarios
-    getAllUsers() {
-        return JSON.parse(localStorage.getItem(this.storageKey)) || [];
-    }
-
-    // Registrar nuevo usuario
-    register(userData) {
-        const users = this.getAllUsers();
-        const { name, email, password, confirmPassword, newsletter } = userData;
-
-        // Validaciones
-        const errors = {};
-
-        if (!name || name.trim().length < 3) {
-            errors.name = 'El nombre debe tener al menos 3 caracteres';
-        }
-
-        if (!email || !this.isValidEmail(email)) {
-            errors.email = 'Por favor ingresa un email válido';
-        }
-
-        if (users.some(u => u.email === email)) {
-            errors.email = 'Este email ya está registrado';
-        }
-
-        if (!password || password.length < 6) {
-            errors.password = 'La contraseña debe tener al menos 6 caracteres';
-        }
-
-        if (password !== confirmPassword) {
-            errors.confirmPassword = 'Las contraseñas no coinciden';
-        }
-
-        if (Object.keys(errors).length > 0) {
-            return { success: false, errors };
-        }
-
-        // Crear nuevo usuario
-        const newUser = {
-            id: Date.now(),
-            name: name.trim(),
-            email: email.toLowerCase().trim(),
-            password: password, // En producción, esto debe estar hasheado
-            newsletter: newsletter || false,
-            createdAt: new Date().toISOString()
-        };
-
-        users.push(newUser);
-        localStorage.setItem(this.storageKey, JSON.stringify(users));
-
-        return { success: true, user: newUser };
-    }
-
-    // Login
-    login(email, password, remember) {
-        const users = this.getAllUsers();
-        const user = users.find(u => u.email === email.toLowerCase().trim());
-
-        const errors = {};
-
-        if (!email) {
-            errors.email = 'Por favor ingresa tu email';
-        } else if (!this.isValidEmail(email)) {
-            errors.email = 'Por favor ingresa un email válido';
-        }
-
-        if (!password) {
-            errors.password = 'Por favor ingresa tu contraseña';
-        }
-
-        if (!user) {
-            errors.email = 'Email no registrado';
-            return { success: false, errors };
-        }
-
-        if (user.password !== password) {
-            errors.password = 'Contraseña incorrecta';
-            return { success: false, errors };
-        }
-
-        if (Object.keys(errors).length > 0) {
-            return { success: false, errors };
-        }
-
-        // Login exitoso
-        const sessionData = {
-            id: user.id,
-            name: user.name,
-            email: user.email,
-            loginTime: new Date().toISOString()
-        };
-
-        localStorage.setItem(this.currentUserKey, JSON.stringify(sessionData));
-
-        if (remember) {
-            localStorage.setItem('tienda_remember', 'true');
-        }
-
-        return { success: true, user: sessionData };
-    }
-
-    // Logout
-    logout() {
-        localStorage.removeItem(this.currentUserKey);
-        localStorage.removeItem('tienda_remember');
-    }
-
-    // Obtener usuario actual
-    getCurrentUser() {
-        const userJson = localStorage.getItem(this.currentUserKey);
-        return userJson ? JSON.parse(userJson) : null;
-    }
-
-    // Verificar si está logueado
-    isLoggedIn() {
-        return this.getCurrentUser() !== null;
-    }
-
-    // Validar email
-    isValidEmail(email) {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return emailRegex.test(email);
-    }
-
-    // Obtener usuario por ID
-    getUserById(id) {
-        const users = this.getAllUsers();
-        return users.find(u => u.id === id);
-    }
-
-    // Actualizar perfil de usuario
-    updateUserProfile(userId, updates) {
-        const users = this.getAllUsers();
-        const userIndex = users.findIndex(u => u.id === userId);
-
-        if (userIndex === -1) return { success: false, error: 'Usuario no encontrado' };
-
-        users[userIndex] = { ...users[userIndex], ...updates };
-        localStorage.setItem(this.storageKey, JSON.stringify(users));
-
-        // Actualizar usuario actual si es el mismo
-        const currentUser = this.getCurrentUser();
-        if (currentUser && currentUser.id === userId) {
-            const updatedSession = { ...currentUser, ...updates };
-            localStorage.setItem(this.currentUserKey, JSON.stringify(updatedSession));
-        }
-
-        return { success: true, user: users[userIndex] };
-    }
+function getCurrentUser() {
+    const userJson = localStorage.getItem('tienda_current_user');
+    return userJson ? JSON.parse(userJson) : null;
 }
 
-// Crear instancia global
-const auth = new AuthManager();
+function isLoggedIn() {
+    return getCurrentUser() !== null;
+}
+
+function setSession(token, user) {
+    localStorage.setItem('tienda_token', token);
+    localStorage.setItem('tienda_current_user', JSON.stringify(user));
+}
+
+function clearSession() {
+    localStorage.removeItem('tienda_token');
+    localStorage.removeItem('tienda_current_user');
+    localStorage.removeItem('tienda_remember');
+}
 
 // ============================================
 // MANEJAR FORMULARIO DE LOGIN
@@ -185,51 +30,50 @@ const auth = new AuthManager();
 
 const loginForm = document.getElementById('loginForm');
 if (loginForm) {
-    loginForm.addEventListener('submit', function(e) {
+    loginForm.addEventListener('submit', async function(e) {
         e.preventDefault();
 
-        // Limpiar errores previos
         document.getElementById('emailError').textContent = '';
         document.getElementById('passwordError').textContent = '';
         document.getElementById('generalError').textContent = '';
 
-        const email = document.getElementById('email').value;
+        const email    = document.getElementById('email').value;
         const password = document.getElementById('password').value;
         const remember = document.getElementById('remember').checked;
 
-        const result = auth.login(email, password, remember);
+        try {
+            const res  = await fetch(`${API_URL}/api/auth/login`, {
+                method:  'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body:    JSON.stringify({ email, password })
+            });
+            const data = await res.json();
 
-        if (result.success) {
-            // Mostrar mensaje de éxito
-            const successMsg = document.createElement('div');
-            successMsg.className = 'success-message';
-            successMsg.textContent = `¡Bienvenido ${result.user.name}!`;
-            loginForm.insertAdjacentElement('beforebegin', successMsg);
+            if (res.ok) {
+                setSession(data.token, data.user);
+                if (remember) localStorage.setItem('tienda_remember', 'true');
 
-            // Redirigir después de 1.5 segundos
-            setTimeout(() => {
-                window.location.href = 'index.html';
-            }, 1500);
-        } else {
-            // Mostrar errores
-            if (result.errors.email) {
-                document.getElementById('emailError').textContent = result.errors.email;
+                const successMsg = document.createElement('div');
+                successMsg.className   = 'success-message';
+                successMsg.textContent = `¡Bienvenido ${data.user.name}!`;
+                loginForm.insertAdjacentElement('beforebegin', successMsg);
+
+                setTimeout(() => { window.location.href = 'index.html'; }, 1500);
+            } else {
+                if (data.errors?.email)    document.getElementById('emailError').textContent    = data.errors.email;
+                if (data.errors?.password) document.getElementById('passwordError').textContent = data.errors.password;
+                if (data.error)            document.getElementById('generalError').textContent  = data.error;
             }
-            if (result.errors.password) {
-                document.getElementById('passwordError').textContent = result.errors.password;
-            }
-            if (result.errors.general) {
-                document.getElementById('generalError').textContent = result.errors.general;
-            }
+        } catch (err) {
+            document.getElementById('generalError').textContent = 'Error de conexión con el servidor';
         }
     });
 
-    // Botón de continuar como invitado
     const guestBtn = document.querySelector('.btn-secondary');
     if (guestBtn) {
         guestBtn.addEventListener('click', function(e) {
             e.preventDefault();
-            localStorage.removeItem(auth.currentUserKey);
+            clearSession();
             window.location.href = 'index.html';
         });
     }
@@ -241,99 +85,102 @@ if (loginForm) {
 
 const registerForm = document.getElementById('registerForm');
 if (registerForm) {
-    registerForm.addEventListener('submit', function(e) {
+    registerForm.addEventListener('submit', async function(e) {
         e.preventDefault();
 
-        // Limpiar errores previos
-        document.getElementById('nameError').textContent = '';
-        document.getElementById('registerEmailError').textContent = '';
+        document.getElementById('nameError').textContent            = '';
+        document.getElementById('registerEmailError').textContent   = '';
         document.getElementById('registerPasswordError').textContent = '';
         document.getElementById('confirmPasswordError').textContent = '';
         document.getElementById('generalRegisterError').textContent = '';
 
-        const data = {
-            name: document.getElementById('fullName').value,
-            email: document.getElementById('registerEmail').value,
-            password: document.getElementById('registerPassword').value,
-            confirmPassword: document.getElementById('confirmPassword').value
-        };
+        const name            = document.getElementById('fullName').value;
+        const email           = document.getElementById('registerEmail').value;
+        const password        = document.getElementById('registerPassword').value;
+        const confirmPassword = document.getElementById('confirmPassword').value;
 
-        const result = auth.register(data);
+        if (password !== confirmPassword) {
+            document.getElementById('confirmPasswordError').textContent = 'Las contraseñas no coinciden';
+            return;
+        }
 
-        if (result.success) {
-            // Mostrar mensaje de éxito
-            const successMsg = document.createElement('div');
-            successMsg.className = 'success-message';
-            successMsg.textContent = `¡Cuenta creada exitosamente! Redirigiendo...`;
-            registerForm.insertAdjacentElement('beforebegin', successMsg);
+        try {
+            const res  = await fetch(`${API_URL}/api/auth/register`, {
+                method:  'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body:    JSON.stringify({ name, email, password })
+            });
+            const data = await res.json();
 
-            // Login automático
-            auth.login(data.email, data.password, false);
+            if (res.ok) {
+                setSession(data.token, data.user);
 
-            // Redirigir después de 1.5 segundos
-            setTimeout(() => {
-                window.location.href = 'index.html';
-            }, 1500);
-        } else {
-            // Mostrar errores
-            if (result.errors.name) {
-                document.getElementById('nameError').textContent = result.errors.name;
+                const successMsg = document.createElement('div');
+                successMsg.className   = 'success-message';
+                successMsg.textContent = '¡Cuenta creada exitosamente! Redirigiendo...';
+                registerForm.insertAdjacentElement('beforebegin', successMsg);
+
+                setTimeout(() => { window.location.href = 'index.html'; }, 1500);
+            } else {
+                if (data.errors?.name)     document.getElementById('nameError').textContent             = data.errors.name;
+                if (data.errors?.email)    document.getElementById('registerEmailError').textContent    = data.errors.email;
+                if (data.errors?.password) document.getElementById('registerPasswordError').textContent = data.errors.password;
+                if (data.error)            document.getElementById('generalRegisterError').textContent  = data.error;
             }
-            if (result.errors.email) {
-                document.getElementById('registerEmailError').textContent = result.errors.email;
-            }
-            if (result.errors.password) {
-                document.getElementById('registerPasswordError').textContent = result.errors.password;
-            }
-            if (result.errors.confirmPassword) {
-                document.getElementById('confirmPasswordError').textContent = result.errors.confirmPassword;
-            }
+        } catch (err) {
+            document.getElementById('generalRegisterError').textContent = 'Error de conexión con el servidor';
         }
     });
 }
 
 // ============================================
-// INICIALIZAR EN PÁGINAS PRINCIPALES
+// NAVBAR - mostrar usuario logueado
 // ============================================
 
-// Actualizar navbar con información del usuario
 function updateNavbar() {
-    const currentUser = auth.getCurrentUser();
-    const navMenu = document.querySelector('.nav-menu');
+    const currentUser = getCurrentUser();
+    const navAuth     = document.querySelector('.nav__auth');
 
-    if (!navMenu) return;
+    if (!navAuth) return;
 
-    // Buscar si ya existe el elemento de usuario
-    let userLinks = navMenu.querySelector('.user-links');
+    const loginBtn    = navAuth.querySelector('.nav__btn--login');
+    const registerBtn = navAuth.querySelector('.nav__btn--register');
 
     if (currentUser) {
-        if (!userLinks) {
-            userLinks = document.createElement('li');
-            userLinks.className = 'nav-item user-links';
-            navMenu.appendChild(userLinks);
-        }
-        userLinks.innerHTML = `
-            <span class="nav-user-greeting">Hola, ${currentUser.name}</span>
-            <div class="nav-user-menu">
-                <a href="profile.html" class="nav-link">Mi Perfil</a>
-                <a href="orders.html" class="nav-link">Mis Pedidos</a>
-                <a href="#" id="logoutBtn" class="nav-link logout">Cerrar Sesión</a>
-            </div>
-        `;
+        if (loginBtn)    loginBtn.style.display    = 'none';
+        if (registerBtn) registerBtn.style.display = 'none';
 
-        // Evento de logout
-        document.getElementById('logoutBtn').addEventListener('click', function(e) {
-            e.preventDefault();
-            auth.logout();
-            window.location.reload();
-        });
-    } else {
-        // Mostrar links de login/registro si no está logueado
-        if (userLinks) {
-            userLinks.remove();
+        if (!navAuth.querySelector('.nav__user')) {
+            const userEl = document.createElement('div');
+            userEl.className = 'nav__user';
+            userEl.innerHTML = `
+                <button class="nav__user-btn" type="button">
+                    <span class="nav__user-name">${currentUser.name.split(' ')[0]}</span>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polyline points="6 9 12 15 18 9"/></svg>
+                </button>
+                <div class="nav__user-dropdown">
+                    <a href="profile.html" class="nav__user-link">Mi Perfil</a>
+                    <button class="nav__user-link nav__user-link--logout" id="navLogoutBtn" type="button">Cerrar sesión</button>
+                </div>
+            `;
+            navAuth.appendChild(userEl);
+
+            userEl.querySelector('.nav__user-btn').addEventListener('click', () => {
+                userEl.classList.toggle('nav__user--open');
+            });
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('.nav__user')) userEl.classList.remove('nav__user--open');
+            });
+            document.getElementById('navLogoutBtn').addEventListener('click', () => {
+                clearSession();
+                window.location.href = 'index.html';
+            });
         }
+    } else {
+        if (loginBtn)    loginBtn.style.display    = '';
+        if (registerBtn) registerBtn.style.display = '';
+        navAuth.querySelector('.nav__user')?.remove();
     }
 }
 
-// Ejecutar cuando el DOM esté listo
 document.addEventListener('DOMContentLoaded', updateNavbar);

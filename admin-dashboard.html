@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Administración - Tienda de Joyas</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/app.css">
+</head>
+<body>
+    <div class="admin-header">
+        <h1>🏪 Panel de Administración</h1>
+        <div class="user-info">
+            <span id="adminName">Administrador</span>
+            <button onclick="logout()">Cerrar Sesión</button>
+        </div>
+    </div>
+
+    <div class="admin-content">
+        <div id="messageBox" class="message"></div>
+
+        <h2 class="section-title">Gestión de Productos</h2>
+        <button class="btn-new" onclick="openProductModal()">+ Agregar Producto</button>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Precio</th>
+                        <th>Categoría</th>
+                        <th>Metal</th>
+                        <th>Stock</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="productsTable">
+                    <tr>
+                        <td colspan="7" style="text-align: center; color: #9ca3af;">Cargando productos...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Modal de Producto -->
+    <div id="productModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Nuevo Producto</h2>
+                <button class="close-btn" onclick="closeProductModal()">×</button>
+            </div>
+
+            <form id="productForm">
+                <div class="form-group">
+                    <label for="nombre">Nombre *</label>
+                    <input type="text" id="nombre" name="nombre" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="descripcion">Descripción</label>
+                    <textarea id="descripcion" name="descripcion"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="precio">Precio *</label>
+                    <input type="number" id="precio" name="precio" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="categoria">Categoría</label>
+                    <select id="categoria" name="categoria">
+                        <option value="">Seleccionar</option>
+                        <option value="anillos">Anillos</option>
+                        <option value="aros">Aros</option>
+                        <option value="pulseras">Pulseras</option>
+                        <option value="collares">Collares</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="metal">Metal</label>
+                    <select id="metal" name="metal">
+                        <option value="">Seleccionar</option>
+                        <option value="oro">Oro</option>
+                        <option value="plata">Plata</option>
+                        <option value="platino">Platino</option>
+                        <option value="oro-blanco">Oro Blanco</option>
+                        <option value="cobre">Cobre</option>
+                        <option value="bronce">Bronce</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="stock">Stock *</label>
+                    <input type="number" id="stock" name="stock" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="imagen">URL de Imagen</label>
+                    <input type="text" id="imagen" name="imagen" placeholder="assets/img/products/...">
+                </div>
+
+                <div class="form-group">
+                    <label>Imágenes del Producto</label>
+                    <div class="drop-zone" id="dropZone">
+                        <p>Arrastra imágenes aquí o haz clic para seleccionar</p>
+                        <input type="file" multiple accept="image/*" id="fileInput" style="display: none;">
+                    </div>
+                    <div class="images-preview" id="imagesPreview"></div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn-submit">Guardar Producto</button>
+                    <button type="button" class="btn-cancel" onclick="closeProductModal()">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="assets/js/admin.js"></script>
+</body>
+</html>

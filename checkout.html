@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout | Tienda</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/app.css">
+</head>
+<body>
+
+    <nav class="nav">
+        <div class="nav__container">
+            <a href="index.html" class="nav__logo">Tienda</a>
+            <div class="nav__auth">
+                <a href="#" class="nav__cart">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+                    <span class="nav__cart-badge"></span>
+                </a>
+                <a href="login.html" class="nav__btn nav__btn--login">Iniciar sesión</a>
+                <a href="register.html" class="nav__btn nav__btn--register">Registrarse</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="checkout">
+        <div class="checkout__container">
+            <a href="index.html" class="checkout__back">← Seguir comprando</a>
+            <h1 class="checkout__title">Finalizar compra</h1>
+
+            <div class="checkout__layout">
+
+                <!-- Columna izquierda: dirección -->
+                <section class="checkout__address">
+                    <h2 class="checkout__section-title">Dirección de envío</h2>
+
+                    <!-- Direcciones guardadas (solo usuarios logueados) -->
+                    <div id="savedAddresses" class="saved-addresses" style="display:none;">
+                        <p class="saved-addresses__label">Tus direcciones guardadas</p>
+                        <div id="addressList" class="saved-addresses__list"></div>
+                        <button id="addNewAddressBtn" class="checkout__link-btn" type="button">+ Agregar nueva dirección</button>
+                    </div>
+
+                    <!-- Aviso para no logueados -->
+                    <div id="guestNotice" class="guest-notice" style="display:none;">
+                        <p><a href="login.html">Inicia sesión</a> para guardar tu dirección para futuras compras.</p>
+                    </div>
+
+                    <!-- Formulario de dirección -->
+                    <form id="addressForm" class="address-form">
+                        <div id="saveAddressOption" class="address-form__save-option" style="display:none;">
+                            <label class="address-form__checkbox-label">
+                                <input type="checkbox" id="saveAddress" checked>
+                                Guardar esta dirección en mi cuenta
+                            </label>
+                        </div>
+                        <div class="address-form__grid">
+                            <div class="address-form__group address-form__group--full">
+                                <label for="nombre_destinatario">Nombre del destinatario *</label>
+                                <input type="text" id="nombre_destinatario" placeholder="Nombre completo" required>
+                                <span class="address-form__error" id="errorNombre"></span>
+                            </div>
+                            <div class="address-form__group address-form__group--full">
+                                <label for="calle">Calle y número *</label>
+                                <input type="text" id="calle" placeholder="Av. Ejemplo 1234, Depto 5B" required>
+                                <span class="address-form__error" id="errorCalle"></span>
+                            </div>
+                            <div class="address-form__group">
+                                <label for="ciudad">Ciudad *</label>
+                                <input type="text" id="ciudad" placeholder="Santiago" required>
+                                <span class="address-form__error" id="errorCiudad"></span>
+                            </div>
+                            <div class="address-form__group">
+                                <label for="region">Región</label>
+                                <input type="text" id="region" placeholder="Metropolitana">
+                            </div>
+                            <div class="address-form__group">
+                                <label for="codigo_postal">Código postal</label>
+                                <input type="text" id="codigo_postal" placeholder="7500000">
+                            </div>
+                            <div class="address-form__group">
+                                <label for="telefono">Teléfono</label>
+                                <input type="text" id="telefono" placeholder="+56 9 1234 5678">
+                            </div>
+                        </div>
+                        <span class="address-form__error" id="errorGeneral"></span>
+                    </form>
+                </section>
+
+                <!-- Columna derecha: resumen del pedido -->
+                <section class="checkout__summary">
+                    <h2 class="checkout__section-title">Resumen del pedido</h2>
+                    <div id="summaryItems" class="summary-items"></div>
+                    <div class="summary-totals">
+                        <div class="summary-totals__row">
+                            <span>Subtotal</span>
+                            <span id="summarySubtotal"></span>
+                        </div>
+                        <div class="summary-totals__row">
+                            <span>Envío</span>
+                            <span class="summary-totals__shipping">Gratis</span>
+                        </div>
+                        <div class="summary-totals__row summary-totals__row--total">
+                            <span>Total</span>
+                            <span id="summaryTotal"></span>
+                        </div>
+                    </div>
+                    <button id="confirmBtn" class="checkout__confirm-btn" type="button">Confirmar pedido</button>
+                    <p id="confirmMsg" class="checkout__confirm-msg" style="display:none;"></p>
+                </section>
+
+            </div>
+        </div>
+    </main>
+
+    <script src="assets/js/auth.js"></script>
+    <script src="assets/js/cart.js"></script>
+    <script src="assets/js/checkout.js"></script>
+</body>
+</html>
