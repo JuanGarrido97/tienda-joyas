@@ -21,6 +21,12 @@ class ProductCarousel {
   }
 
   async loadImages() {
+    // Usar imágenes pre-cargadas por el servidor si están disponibles
+    if (window.__PRODUCT_IMAGES__ && window.__PRODUCT_IMAGES__.length > 0) {
+      this.images = window.__PRODUCT_IMAGES__.map((url, i) => ({ url, orden: i }));
+      return;
+    }
+
     try {
       const [imagesRes, productRes] = await Promise.all([
         fetch(`http://localhost:3000/api/products/${this.productId}/images`),
@@ -29,7 +35,6 @@ class ProductCarousel {
       if (imagesRes.ok) {
         this.images = await imagesRes.json();
       }
-      // Fallback: si no hay imágenes extras, usar la imagen principal del producto
       if (this.images.length === 0 && productRes.ok) {
         const product = await productRes.json();
         if (product.image) {
@@ -134,12 +139,12 @@ class ProductCarousel {
 
 // Inicializar carrusel cuando el DOM está listo
 document.addEventListener('DOMContentLoaded', () => {
-  // Obtener ID del producto de la URL
+  // Soporta /producto/3 (SSR) y product.html?id=3 (legado)
+  const pathMatch = window.location.pathname.match(/\/producto\/(\d+)/);
   const params = new URLSearchParams(window.location.search);
-  const productId = params.get('id');
+  const productId = pathMatch ? pathMatch[1] : params.get('id');
 
   if (productId) {
-    // Inicializar carrusel
     window.carousel = new ProductCarousel('carouselContainer', productId);
   }
 });

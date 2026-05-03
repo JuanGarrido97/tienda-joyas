@@ -61,3 +61,19 @@
     color: $color-text-light;
   }
 }
+
+@media (max-width: 767px) {
+  .footer {
+    margin-top: 2.5rem;
+
+    &__container {
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: 2rem 1rem;
+      gap: 1.5rem;
+    }
+
+    &__icons { justify-content: center; }
+  }
+}

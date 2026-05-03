@@ -72,6 +72,43 @@
     transition: opacity 0.2s, visibility 0.2s, transform 0.2s;
   }
 
+  &__search {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba($color-dark, 0.12);
+    border: 1px solid rgba($color-dark, 0.2);
+    border-radius: 20px;
+    padding: 0.35rem 0.9rem;
+    margin-left: 1.5rem;
+    transition: background 0.2s, border-color 0.2s;
+
+    &:focus-within {
+      background: rgba($color-dark, 0.18);
+      border-color: rgba($color-dark, 0.4);
+    }
+  }
+
+  &__search-icon {
+    color: $color-dark;
+    opacity: 0.6;
+    flex-shrink: 0;
+  }
+
+  &__search-input {
+    background: none;
+    border: none;
+    outline: none;
+    font-family: $font-body;
+    font-size: 0.88rem;
+    color: $color-dark;
+    width: 180px;
+
+    &::placeholder {
+      color: rgba($color-dark, 0.5);
+    }
+  }
+
   &__auth {
     display: flex;
     align-items: center;
@@ -136,6 +173,180 @@
 
     &:hover {
       background-color: rgba($color-secondary, 0.2);
+    }
+  }
+
+  // ── Hamburger ─────────────────────────────────────────────
+  &__hamburger {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.4rem;
+    margin-left: auto;
+    z-index: 101;
+
+    span {
+      display: block;
+      width: 22px;
+      height: 2px;
+      background: $color-dark;
+      border-radius: 2px;
+      transition: transform 0.25s, opacity 0.25s;
+    }
+
+    &--open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    &--open span:nth-child(2) { opacity: 0; }
+    &--open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+  }
+}
+
+// ── Usuario logueado ───────────────────────────────────────
+.nav__user {
+  position: relative;
+
+  &-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    background: none;
+    border: 1.5px solid $color-dark;
+    border-radius: 4px;
+    padding: 0.4rem 0.8rem;
+    font-family: $font-body;
+    font-size: 0.88rem;
+    font-weight: 500;
+    color: $color-dark;
+    cursor: pointer;
+    transition: background 0.2s;
+
+    &:hover { background: rgba($color-dark, 0.08); }
+  }
+
+  &-dropdown {
+    display: none;
+    position: absolute;
+    top: calc(100% + 6px);
+    right: 0;
+    background: $color-white;
+    border-radius: 6px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    min-width: 150px;
+    padding: 0.4rem 0;
+    z-index: 200;
+  }
+
+  &--open &-dropdown { display: block; }
+
+  &-link {
+    display: block;
+    width: 100%;
+    background: none;
+    border: none;
+    text-align: left;
+    padding: 0.55rem 1rem;
+    font-family: $font-body;
+    font-size: 0.88rem;
+    color: $color-dark;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background 0.15s;
+
+    &:hover { background: rgba($color-secondary, 0.15); }
+
+    &--logout { color: #e05; }
+  }
+}
+
+// ── Responsive ────────────────────────────────────────────
+@media (max-width: 1023px) {
+  .nav {
+    &__search-input { width: 130px; }
+  }
+}
+
+@media (max-width: 767px) {
+  .nav {
+    &__hamburger { display: flex; }
+
+    &__container {
+      flex-wrap: wrap;
+      height: auto;
+      padding: 0 1rem;
+      min-height: 56px;
+      position: relative;
+    }
+
+    &__logo { margin-right: auto; }
+
+    &__search { display: none; }
+
+    &__auth {
+      order: -1;
+      margin-left: 0;
+      gap: 0.5rem;
+    }
+
+    &__btn { display: none; }
+
+    // Panel deslizante con tema oscuro
+    &__menu {
+      display: none;
+      flex-direction: column;
+      gap: 0;
+      width: 100%;
+      background: $color-dark;
+      border-top: 1px solid rgba($color-secondary, 0.15);
+      padding: 0.75rem 0 1.25rem;
+
+      &--open { display: flex; }
+    }
+
+    &__item { width: 100%; }
+
+    &__link {
+      width: 100%;
+      text-align: left;
+      border-radius: 0;
+      padding: 0.85rem 1.25rem;
+      color: $color-text;
+      font-size: 0.95rem;
+      letter-spacing: 0.02em;
+
+      &:hover {
+        background: rgba($color-secondary, 0.08);
+        color: $color-secondary;
+      }
+    }
+
+    &__dropdown {
+      position: static;
+      box-shadow: none;
+      opacity: 1;
+      visibility: visible;
+      transform: none;
+      background: rgba($color-secondary, 0.04);
+      border-top: 1px solid rgba($color-secondary, 0.08);
+      border-bottom: 1px solid rgba($color-secondary, 0.08);
+      border-radius: 0;
+      padding: 0.25rem 0;
+      display: none;
+    }
+
+    &__item--dropdown.active &__dropdown { display: block; }
+
+    &__dropdown-link {
+      padding: 0.7rem 2rem;
+      color: $color-text-light;
+      font-size: 0.88rem;
+
+      &:hover {
+        background: rgba($color-secondary, 0.08);
+        color: $color-secondary;
+      }
     }
   }
 }

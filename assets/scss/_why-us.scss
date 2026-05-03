@@ -1,0 +1,78 @@
+@use 'variables' as *;
+
+.why-us {
+  padding: 3.5rem 0;
+  border-bottom: 1px solid rgba($color-white, 0.06);
+
+  &__container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+    max-width: $breakpoint-xl;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+  }
+
+  &__item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 2rem 1.5rem;
+    background: rgba($color-white, 0.03);
+    border: 1px solid rgba($color-white, 0.07);
+    border-radius: 10px;
+    transition: border-color 0.25s, transform 0.25s;
+
+    &:hover {
+      border-color: rgba($color-secondary, 0.35);
+      transform: translateY(-3px);
+    }
+  }
+
+  &__icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: rgba($color-secondary, 0.1);
+    border: 1px solid rgba($color-secondary, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: $color-secondary;
+    margin-bottom: 1.1rem;
+    flex-shrink: 0;
+  }
+
+  &__title {
+    font-family: $font-heading;
+    font-size: 1rem;
+    font-weight: 600;
+    color: $color-text;
+    margin-bottom: 0.5rem;
+  }
+
+  &__text {
+    font-size: 0.85rem;
+    color: $color-text-light;
+    line-height: 1.6;
+  }
+}
+
+@media (max-width: 1023px) {
+  .why-us__container { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 767px) {
+  .why-us {
+    padding: 2.5rem 0;
+
+    &__container {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.75rem;
+      padding: 0 1rem;
+    }
+
+    &__item { padding: 1.25rem 1rem; }
+  }
+}

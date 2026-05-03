@@ -1,4 +1,16 @@
 document.addEventListener('DOMContentLoaded', () => {
+  // ── Toggle filtros mobile ─────────────────────────────────
+  const filtersToggle = document.getElementById('filtersToggle');
+  const filtersAside  = document.getElementById('filtersAside');
+  if (filtersToggle && filtersAside) {
+    filtersToggle.addEventListener('click', () => {
+      filtersAside.classList.toggle('filters--visible');
+      filtersToggle.textContent = filtersAside.classList.contains('filters--visible')
+        ? '✕ Cerrar filtros'
+        : '☰ Filtros';
+    });
+  }
+
   // ── Hamburger ─────────────────────────────────────────────
   const hamburger = document.getElementById('navHamburger');
   const navMenu   = document.getElementById('navMenu');
@@ -55,7 +67,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     products.forEach(product => {
       const card = document.createElement('a');
-      card.href = `product.html?id=${product.id}`;
+      card.href = `/producto/${product.id}`;
       card.classList.add('product-card');
 
       if (product.stock <= 0) card.classList.add('product-card--out');
@@ -198,8 +210,46 @@ document.addEventListener('DOMContentLoaded', () => {
     .then(products => {
       allProducts = products;
       renderProducts(allProducts);
+      initFeatured(allProducts);
     })
     .catch(() => {
       grid.innerHTML = '<p class="products__empty">Error al cargar productos.</p>';
     });
+
+  // ── Sección destacados ────────────────────────────────────
+  function initFeatured(products) {
+    const section  = document.getElementById('featuredSection');
+    const track    = document.getElementById('featuredTrack');
+    const tabs     = document.querySelectorAll('.featured__tab');
+    if (!section || !track || products.length === 0) return;
+
+    const bestsellers = [...products].slice(0, 6);
+    const newest      = [...products].reverse().slice(0, 6);
+
+    function renderFeaturedCards(list) {
+      track.innerHTML = list.map(p => `
+        <a href="/producto/${p.id}" class="featured-card">
+          <div class="featured-card__img" style="background-image:url('${p.image}')"></div>
+          <p class="featured-card__name">${p.name}</p>
+          <p class="featured-card__price">${formatPrice(p.price)}</p>
+        </a>
+      `).join('');
+    }
+
+    renderFeaturedCards(bestsellers);
+    section.style.display = 'block';
+
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        tabs.forEach(t => t.classList.remove('featured__tab--active'));
+        tab.classList.add('featured__tab--active');
+        const list = tab.dataset.tab === 'new' ? newest : bestsellers;
+        track.style.opacity = '0';
+        setTimeout(() => {
+          renderFeaturedCards(list);
+          track.style.opacity = '1';
+        }, 180);
+      });
+    });
+  }
 });

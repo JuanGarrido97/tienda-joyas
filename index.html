@@ -3,7 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Joyería | Tienda Online</title>
+    <title>Tienda Joyas | Anillos, Aros, Pulseras y Collares</title>
+    <meta name="description" content="Descubre nuestra colección de joyas exclusivas: anillos, aros, pulseras y collares en platino, oro, plata y más. Envío a todo Chile.">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Tienda Joyas | Anillos, Aros, Pulseras y Collares">
+    <meta property="og:description" content="Descubre nuestra colección de joyas exclusivas: anillos, aros, pulseras y collares en platino, oro, plata y más.">
+    <meta property="og:image" content="/assets/img/banner.jpg">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Tienda Joyas | Anillos, Aros, Pulseras y Collares">
+    <meta name="twitter:description" content="Descubre nuestra colección de joyas exclusivas: anillos, aros, pulseras y collares en platino, oro, plata y más.">
+    <meta name="twitter:image" content="/assets/img/banner.jpg">
+
+    <!-- Schema.org -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "JewelryStore",
+      "name": "Tienda Joyas",
+      "description": "Tienda online de joyas exclusivas en Chile",
+      "url": "http://localhost:3000"
+    }
+    </script>
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -58,9 +83,56 @@
         <img src="assets/img/banner.jpg" alt="Joyería exclusiva" class="banner__img">
     </section>
 
+    <section class="featured" id="featuredSection" style="display:none;">
+        <div class="featured__container">
+            <div class="featured__header">
+                <h2 class="featured__title">Destacados</h2>
+                <div class="featured__tabs">
+                    <button class="featured__tab featured__tab--active" data-tab="bestsellers" type="button">Más vendidos</button>
+                    <button class="featured__tab" data-tab="new" type="button">Novedades</button>
+                </div>
+            </div>
+            <div class="featured__track" id="featuredTrack"></div>
+        </div>
+    </section>
+
+    <section class="why-us">
+        <div class="why-us__container">
+            <div class="why-us__item">
+                <div class="why-us__icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="28" height="28"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                </div>
+                <h3 class="why-us__title">Calidad garantizada</h3>
+                <p class="why-us__text">Cada pieza es inspeccionada antes del envío. Certificamos los materiales que usamos.</p>
+            </div>
+            <div class="why-us__item">
+                <div class="why-us__icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="28" height="28"><path d="M5 12H19M19 12L13 6M19 12L13 18"/><rect x="2" y="3" width="20" height="18" rx="2" opacity="0.15" fill="currentColor"/></svg>
+                </div>
+                <h3 class="why-us__title">Envío a todo Chile</h3>
+                <p class="why-us__text">Despacho rápido y seguro a cualquier región. Seguimiento de tu pedido en tiempo real.</p>
+            </div>
+            <div class="why-us__item">
+                <div class="why-us__icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="28" height="28"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                </div>
+                <h3 class="why-us__title">Hecho con amor</h3>
+                <p class="why-us__text">Diseños únicos creados por artesanos especializados. Cada joya cuenta una historia.</p>
+            </div>
+            <div class="why-us__item">
+                <div class="why-us__icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="28" height="28"><path d="M3 10h18M7 15h1m4 0h1m-7 4h12a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2z"/></svg>
+                </div>
+                <h3 class="why-us__title">Pago seguro</h3>
+                <p class="why-us__text">Tus datos siempre protegidos. Aceptamos múltiples medios de pago con total seguridad.</p>
+            </div>
+        </div>
+    </section>
+
     <section class="products">
         <div class="products__container">
-            <aside class="filters">
+            <aside class="filters" id="filtersAside">
+                <button class="filters__toggle" id="filtersToggle" type="button">☰ Filtros</button>
                 <div class="filters__group">
                     <h4 class="filters__heading">Joyas</h4>
                     <ul class="filters__list">
@@ -126,6 +198,41 @@
             </aside>
 
             <div class="products__grid"></div>
+        </div>
+    </section>
+
+    <section class="about">
+        <div class="about__container">
+            <div class="about__text">
+                <span class="about__tag">Nuestra historia</span>
+                <h2 class="about__title">Un negocio de familia, hecho con pasión</h2>
+                <p class="about__body">Somos una familia que lleva más de una generación creando y seleccionando joyas con dedicación. Lo que comenzó como un hobbie de nuestros padres se convirtió en nuestro propósito: acercar piezas únicas y de calidad a las personas que más queremos — nuestros clientes.</p>
+                <p class="about__body">Cada joya que ofrecemos pasa por nuestras manos antes de llegar a las tuyas. No somos una gran empresa: somos personas reales que se preocupan de que tu experiencia sea especial, desde que navegas la tienda hasta que abres el paquete.</p>
+                <div class="about__values">
+                    <div class="about__value">
+                        <span class="about__value-number">+10</span>
+                        <span class="about__value-label">Años de experiencia</span>
+                    </div>
+                    <div class="about__value">
+                        <span class="about__value-number">500+</span>
+                        <span class="about__value-label">Clientes felices</span>
+                    </div>
+                    <div class="about__value">
+                        <span class="about__value-number">100%</span>
+                        <span class="about__value-label">Materiales certificados</span>
+                    </div>
+                </div>
+            </div>
+            <div class="about__image">
+                <div class="about__image-inner">
+                    <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg" width="80" height="80" opacity="0.25">
+                        <circle cx="60" cy="60" r="58" stroke="currentColor" stroke-width="1.5"/>
+                        <path d="M60 20 L80 50 L100 45 L85 70 L90 95 L60 80 L30 95 L35 70 L20 45 L40 50 Z" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                        <circle cx="60" cy="60" r="12" stroke="currentColor" stroke-width="1.5"/>
+                    </svg>
+                    <p class="about__image-caption">Familia &amp; Tradición</p>
+                </div>
+            </div>
         </div>
     </section>
 

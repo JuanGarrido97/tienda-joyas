@@ -10,8 +10,17 @@ const path    = require('path');
 const fs      = require('fs');
 const pool    = require('./db');
 
-const app  = express();
-const PORT = process.env.PORT || 3000;
+const app     = express();
+const PORT    = process.env.PORT || 3000;
+const SITE_URL = process.env.SITE_URL || `http://localhost:${PORT}`;
+
+// ============================================
+// MOTOR DE VISTAS Y ARCHIVOS ESTÁTICOS
+// ============================================
+
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
+app.use(express.static(path.join(__dirname, '..')));
 
 // ============================================
 // CONFIGURACIÓN DE MULTER
@@ -647,11 +656,64 @@ app.delete('/api/user/addresses/:id', verifyToken, async (req, res) => {
 });
 
 // ============================================
-// RUTA DE PRUEBA
+// SSR - PÁGINA DE PRODUCTO
 // ============================================
 
-app.get('/', (req, res) => {
-  res.json({ mensaje: 'Servidor de Tienda de Joyas funcionando' });
+app.get('/producto/:id', async (req, res) => {
+  try {
+    const [products] = await pool.query(
+      'SELECT id, nombre AS name, descripcion AS description, precio AS price, categoria AS category, metal AS metal, stock, imagen AS image FROM productos WHERE id = ?',
+      [req.params.id]
+    );
+    if (products.length === 0) return res.status(404).sendFile(path.join(__dirname, '../404.html'));
+
+    const product = products[0];
+
+    const [images] = await pool.query(
+      'SELECT url FROM producto_imagenes WHERE producto_id = ? ORDER BY orden ASC',
+      [product.id]
+    );
+    const imageUrls = images.length > 0 ? images.map(i => i.url) : (product.image ? [product.image] : []);
+
+    res.render('producto', { product, imageUrls, siteUrl: SITE_URL });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error al cargar el producto');
+  }
+});
+
+// ============================================
+// SITEMAP.XML
+// ============================================
+
+app.get('/sitemap.xml', async (req, res) => {
+  try {
+    const [products] = await pool.query('SELECT id, nombre AS name FROM productos');
+
+    const urls = [
+      `<url><loc>${SITE_URL}/</loc><changefreq>daily</changefreq><priority>1.0</priority></url>`,
+      ...products.map(p =>
+        `<url><loc>${SITE_URL}/producto/${p.id}</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>`
+      )
+    ].join('\n  ');
+
+    res.header('Content-Type', 'application/xml');
+    res.send(`<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  ${urls}
+</urlset>`);
+  } catch (err) {
+    res.status(500).send('Error al generar sitemap');
+  }
+});
+
+// ============================================
+// ROBOTS.TXT
+// ============================================
+
+app.get('/robots.txt', (req, res) => {
+  res.type('text/plain');
+  res.send(`User-agent: *\nAllow: /\nSitemap: ${SITE_URL}/sitemap.xml`);
 });
 
 // ============================================

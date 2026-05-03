@@ -35,3 +35,11 @@
     display: block;
   }
 }
+
+@media (max-width: 1023px) {
+  .banner__img { height: 380px; }
+}
+
+@media (max-width: 767px) {
+  .banner__img { height: 220px; }
+}

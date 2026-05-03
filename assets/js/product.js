@@ -1,9 +1,11 @@
 document.addEventListener('DOMContentLoaded', () => {
+  // Soporta tanto /producto/3 (SSR) como product.html?id=3 (legado)
+  const pathMatch = window.location.pathname.match(/\/producto\/(\d+)/);
   const params = new URLSearchParams(window.location.search);
-  const productId = parseInt(params.get('id'));
+  const productId = pathMatch ? parseInt(pathMatch[1]) : parseInt(params.get('id'));
 
   if (!productId) {
-    window.location.href = 'index.html';
+    window.location.href = '/';
     return;
   }
 
@@ -65,12 +67,14 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // ── Producto principal ────────────────────────────────────
-  fetch(`http://localhost:3000/api/products/${productId}`)
-    .then(res => {
-      if (!res.ok) { window.location.href = 'index.html'; return null; }
-      return res.json();
-    })
-    .then(product => {
+  // Usa datos pre-cargados del servidor (SSR) si están disponibles
+  const preloaded = window.__PRODUCT__ || null;
+  const productPromise = preloaded
+    ? Promise.resolve(preloaded)
+    : fetch(`http://localhost:3000/api/products/${productId}`)
+        .then(res => { if (!res.ok) { window.location.href = '/'; return null; } return res.json(); });
+
+  productPromise.then(product => {
       if (!product) return;
 
       document.title = `${product.name} | Tienda`;
@@ -140,7 +144,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const grid    = document.getElementById('relatedGrid');
 
         grid.innerHTML = related.map(p => `
-          <a href="product.html?id=${p.id}" class="related-card">
+          <a href="/producto/${p.id}" class="related-card">
             <div class="related-card__img" style="background-image: url('${p.image}')"></div>
             <div class="related-card__info">
               <p class="related-card__name">${p.name}</p>
